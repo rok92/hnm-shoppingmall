@@ -2,18 +2,18 @@ import React, { useEffect, useState } from "react";
 import ProductCard from "../components/ProductCard";
 import { Container, Row, Col } from "react-bootstrap";
 import { useSearchParams } from "react-router-dom";
+import { productAction } from "../redux/actions/productAction";
+import { useDispatch, useSelector } from "react-redux";
 
 const ProductAll = () => {
-  const [productList, setProductList] = useState([]);
+  const productList = useSelector((state) => state.product.productList);
   const [query, setQuery] = useSearchParams();
+  const dispatch = useDispatch();
 
   const getProducts = async () => {
     let searchQuery = query.get("q") || "";
     console.log("쿼리값:::", searchQuery);
-    let url = ` https://my-json-server.typicode.com/rok92/hnm-shoppingmall/products?q=${searchQuery}`;
-    let res = await fetch(url);
-    let data = await res.json();
-    setProductList(data);
+    dispatch(productAction.getProducts(searchQuery));
   };
   useEffect(() => {
     getProducts();
